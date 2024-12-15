@@ -62,7 +62,7 @@ func makeHTTPReqWithAuthToken(method, url string, body io.Reader, authToken stri
 /*
 The client credentials grant flow is meant only for server-to-server API requests that use an app access token.
 */
-func GetOAuthTokenUsingClientCredentialsGrantFlow() OAuthToken {
+func getOAuthTokenUsingClientCredentialsGrantFlow() OAuthToken {
 	//fmt.Print("Attempting to get OAuth Token....\n")
 
 	url := "https://id.twitch.tv/oauth2/token"
@@ -89,7 +89,7 @@ func FetchOAuthEndpoint(queries string) []byte {
 
 	url := fmt.Sprintf("https://api.twitch.tv/helix/%s", queries)
 
-	oAuthToken := GetOAuthTokenUsingClientCredentialsGrantFlow()
+	oAuthToken := getOAuthTokenUsingClientCredentialsGrantFlow()
 
 	req := makeHTTPReqWithAuthToken("GET", url, nil, oAuthToken.AccessToken)
 	req.Header.Add("Client-Id", os.Getenv("CLIENT_ID"))

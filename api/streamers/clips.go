@@ -39,15 +39,12 @@ type Clip struct {
 /*
 Fetches clips
 */
-func fetchClips(broadcasterName string, broadcasterID string) []Clip { // Get top 10 clips from a channel from the previous month
+func fetchClips(broadcasterName string, broadcasterID string, st time.Time, et time.Time) []Clip { // Get top 10 clips from a channel from the previous month
 
 	fmt.Printf("Attempting to fetch clips of %s\n", broadcasterName)
 
-	t := time.Now()
-	endTime := time.Date(2021, t.Month(), 1, 0, 0, 0, 0, t.Location())
-	endTimeParsed := endTime.Format(time.RFC3339)
-	startTime := endTime.AddDate(0, -1, 0)
-	startTimeParsed := startTime.Format(time.RFC3339)
+	startTimeParsed := st.Format(time.RFC3339)
+	endTimeParsed := et.Format(time.RFC3339)
 
 	params := url.Values{}
 	params.Add("broadcaster_id", broadcasterID)
@@ -65,7 +62,7 @@ func fetchClips(broadcasterName string, broadcasterID string) []Clip { // Get to
 	return userClips.Clips
 }
 
-func GetClips(user User) []Clip {
-	clips := fetchClips(user.DisplayName, user.ID)
+func GetClips(user User, startTime time.Time, endTime time.Time) []Clip {
+	clips := fetchClips(user.DisplayName, user.ID, startTime, endTime)
 	return clips
 }
