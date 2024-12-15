@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/khujou/twitchgo/api/oauth"
@@ -39,7 +40,7 @@ type Clip struct {
 /*
 Fetches clips
 */
-func fetchClips(broadcasterName string, broadcasterID string, st time.Time, et time.Time) []Clip { // Get top 10 clips from a channel from the previous month
+func fetchClips(broadcasterName, broadcasterID string, amountClips int, st, et time.Time) []Clip { // Get top 10 clips from a channel from the previous month
 
 	fmt.Printf("Attempting to fetch clips of %s\n", broadcasterName)
 
@@ -50,7 +51,7 @@ func fetchClips(broadcasterName string, broadcasterID string, st time.Time, et t
 	params.Add("broadcaster_id", broadcasterID)
 	params.Add("started_at", startTimeParsed)
 	params.Add("ended_at", endTimeParsed)
-	params.Add("first", "10")
+	params.Add("first", strconv.Itoa(amountClips))
 
 	queries := fmt.Sprintf("clips?%s", params.Encode())
 
@@ -62,7 +63,7 @@ func fetchClips(broadcasterName string, broadcasterID string, st time.Time, et t
 	return userClips.Clips
 }
 
-func GetClips(user User, startTime time.Time, endTime time.Time) []Clip {
-	clips := fetchClips(user.DisplayName, user.ID, startTime, endTime)
+func GetClips(user User, amountClips int, startTime, endTime time.Time) []Clip {
+	clips := fetchClips(user.DisplayName, user.ID, amountClips, startTime, endTime)
 	return clips
 }
